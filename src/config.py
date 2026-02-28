@@ -14,7 +14,7 @@ class Config:
     DEFAULTS = {
         'shortcut': 'cmd+shift+d',  # Global hotkey
         'recording_mode': 'toggle',  # 'toggle' or 'push_to_talk'
-        'model': 'base.en',          # Whisper model
+        'model': 'small.en',         # Whisper model
         'language': None,            # Auto-detect
         'paste_mode': 'cmd',         # 'cmd' for Cmd+V
         'auto_submit': False,        # Send Enter after paste
