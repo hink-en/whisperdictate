@@ -1,4 +1,4 @@
-# whisper-dictate
+# Whisper Dictate
 
 A fast, local speech-to-text dictation app for macOS. Double-tap Shift, speak, and watch your words appear in real-time.
 
@@ -24,56 +24,56 @@ Keep speaking... (transcribes after each pause)
 Double-tap Shift → 🎤 Stopped
 ```
 
-## Installation
+## Install the macOS app
 
-### Prerequisites
+1. Open `Whisper Dictate.dmg` and drag **Whisper Dictate** into **Applications**.
+2. Quit the old Terminal-launched copy, then open **Whisper Dictate**.
+3. Click the microphone in the menu bar → **Settings…**.
+4. Select a model and click **Download & Use Model** if needed. Existing models
+   and `~/.config/whisper-dictate/config.json` are reused automatically.
+5. Grant microphone access when recording starts. For shortcuts and pasting,
+   enable **Whisper Dictate** under System Settings → Privacy & Security →
+   Accessibility and Input Monitoring. The app reconnects after access changes;
+   reopen it if macOS requests it. **Settings → Permissions…** reports access for
+   the running build. If a switch is on but access is denied, toggle it off and on
+   or remove the stale entry and add the app from Applications again.
+6. Enable **Launch at login** in Settings to keep the app available after signing in.
+   If macOS requests approval, allow it under General → Login Items & Extensions.
 
-- macOS 12.0 (Monterey) or later
-- Python 3.10+
+The app requires macOS 13 or later. It stays in the menu bar and does not need a
+Terminal window or a separate Python installation. It starts idle at login;
+recording only begins when you use a shortcut or Start Recording.
 
-### Setup
+The initial build is for Apple Silicon and is ad-hoc signed for local use. Public
+distribution requires Developer ID signing and notarization; see
+[packaging instructions](packaging/README.md).
 
-```bash
-# Clone the repo
-git clone https://github.com/YOUR_USERNAME/whisper-dictate.git
-cd whisper-dictate
+### Settings
 
-# Run setup (creates venv, installs deps, downloads Whisper model)
-chmod +x setup.sh
+- **Language:** English, Svenska, or Auto-detect; also accessible directly in the menu.
+- **Model:** download and activate multilingual models without editing JSON.
+  Model changes stop recording and take effect when loading finishes.
+- **Microphone:** system default or a specific input device.
+- **Shortcuts:** independently enable double-tap Shift and F5.
+- **Press Return:** optionally submit text after each transcription.
+- **Launch at login:** register the installed app with macOS.
+
+Click **Save Settings** to save language, microphone, and shortcut preferences.
+**Download & Use Model** and **Launch at login** apply separately.
+Choose **Svenska** to force Swedish. English-only models such as `small.en` do not
+support Swedish; use a multilingual model such as `small` or `medium` instead.
+Settings are stored automatically and survive restarting the app.
+
+### Run from source
+
+```sh
 ./setup.sh
+./run.sh
 ```
 
-### Permissions
-
-On first run, macOS will ask for:
-
-1. **Accessibility** - for global keyboard shortcuts
-   - System Preferences → Privacy & Security → Accessibility
-
-2. **Microphone** - for audio recording
-   - System Preferences → Privacy & Security → Microphone
-
-## Usage
-
-```bash
-# Activate virtual environment
-source ~/.local/share/whisper-dictate/venv/bin/activate
-
-# Run menu bar app
-python main.py
-
-# Or run CLI mode (shows debug output)
-python cli.py
-```
-
-### Controls
-
-| Action | Trigger |
-|--------|---------|
-| Start dictation | Double-tap Shift |
-| Stop dictation | Double-tap Shift |
-
-That's it. No complex shortcuts to remember.
+To build the app and DMG, see [packaging/README.md](packaging/README.md).
+The original command-line mode remains available with `python cli.py` from the
+virtual environment. Use **Open Logs** in the app menu for packaged-app diagnostics.
 
 ## How It Works
 
@@ -84,11 +84,12 @@ That's it. No complex shortcuts to remember.
 
 ## Configuration
 
-Edit `~/.config/whisper-dictate/config.json`:
+The Settings window manages common options. Advanced options remain in
+`~/.config/whisper-dictate/config.json`:
 
 ```json
 {
-  "model": "base.en",
+  "model": "small",
   "auto_submit": false
 }
 ```
@@ -97,7 +98,8 @@ Edit `~/.config/whisper-dictate/config.json`:
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| `model` | Whisper model size | `base.en` |
+| `model` | Whisper model size | `small` |
+| `language` | `en` (English), `sv` (Swedish), or `auto`/`null` (auto-detect) | `null` |
 | `auto_submit` | Press Enter after each transcription | `false` |
 
 ### Whisper Models

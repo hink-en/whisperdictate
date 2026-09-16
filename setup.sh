@@ -33,8 +33,8 @@ pip install -r requirements.txt
 
 # Download Whisper model
 echo
-echo "Downloading Whisper model (base.en)..."
-python3 -c "from pywhispercpp.model import Model; Model('base.en')"
+echo "Downloading Whisper model (small)..."
+python3 -c "from pywhispercpp.model import Model; Model('small')"
 
 # Create config directory
 mkdir -p "$HOME/.config/whisper-dictate"
