@@ -141,6 +141,15 @@ class MacHyprwhspr(rumps.App):
         if not self.transcriber.ready:
             self.show_settings(None)
             return
+        if not keyboard_permissions()[0]:
+            self._update_status('Accessibility required for pasting — see Settings → Permissions')
+            self.alert('Accessibility Required',
+                       'macOS is blocking text output. Enable Whisper Dictate in '
+                       'System Settings → Privacy & Security → Accessibility. '
+                       'If it is already enabled, toggle it off and on or remove '
+                       'the old entry and add the app from Applications again. '
+                       'Then try recording again.')
+            return
         microphone = self.config.get('microphone')
         self.audio.device_id = None
         if microphone:
@@ -172,8 +181,10 @@ class MacHyprwhspr(rumps.App):
             if not self.is_recording or session != self._session:
                 return
             if text and text.strip():
-                self.injector.inject(text)
-                self._update_status('Listening…')
+                if self.injector.inject(text):
+                    self._update_status('Listening…')
+                else:
+                    self._update_status('Text output failed — check Accessibility in Settings → Permissions and Open Logs')
             self._update_icon('recording')
         self._events.put(finish)
 

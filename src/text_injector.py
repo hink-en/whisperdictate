@@ -8,6 +8,7 @@ import re
 import subprocess
 
 import pyperclip
+from ApplicationServices import AXIsProcessTrusted
 from Quartz import (
     CGEventCreateKeyboardEvent,
     CGEventPost,
@@ -41,6 +42,11 @@ class TextInjector:
         """
         if not text or not text.strip():
             return True
+
+        # CGEventPost silently drops events when this build is not trusted.
+        if not AXIsProcessTrusted():
+            print('[INJECTOR] Text output blocked: Accessibility permission is missing', flush=True)
+            return False
 
         # Preprocess text
         processed = self._preprocess(text)
